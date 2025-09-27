@@ -28,10 +28,10 @@ jobs:
           command: |
             sudo docker-php-ext-install pdo pdo_mysql
       
-      # Download and cache dependencies
-      - php/install-composer
-      - php/composer-install:
-          ignore-platform-reqs: true
+      - run:
+          name: "Install Laravel dependencies"
+          command: |
+            composer install
           
       # Set up the Laravel application
       - run:
