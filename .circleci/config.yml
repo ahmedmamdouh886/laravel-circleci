@@ -43,6 +43,9 @@ jobs:
           name: "Lint codebase."
           command: |
             ./vendor/bin/pint
+            git add .
+            git commit 'Code standard fixed.'
+            git push
             
       # Run tests
       - run:
