@@ -23,10 +23,10 @@ jobs:
     steps:
       - checkout
       
-      - run:
-          name: "Install php extensions dependencies"
-          command: |
-            sudo docker-php-ext-install pdo pdo_mysql
+      # - run:
+      #     name: "Install php extensions dependencies"
+      #     command: |
+      #       sudo docker-php-ext-install pdo pdo_mysql
       
       - run:
           name: "Install Laravel dependencies"
