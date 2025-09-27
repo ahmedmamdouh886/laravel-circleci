@@ -31,7 +31,19 @@ jobs:
       - run:
           name: "Lint codebase."
           command: |
+            git config --global user.email "ci-bot@example.com"
+            git config --global user.name "CircleCI Bot"
             ./vendor/bin/pint
+      - run:
+          name: Commit & Push Fixes
+          command: |
+            if [ -n "$(git status --porcelain)" ]; then
+              git add .
+              git commit --amend --no-edit
+              git push origin HEAD --force
+            else
+              echo "No Pint fixes needed"
+            fi
             
       # Run tests
       - run:
