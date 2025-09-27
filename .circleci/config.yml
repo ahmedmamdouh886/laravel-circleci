@@ -28,36 +28,20 @@ jobs:
             php artisan key:generate
       
       # Lint code.
-      # - run:
-      #     name: "Lint codebase."
-      #     command: |
-      #       git config --global user.email "ahmedmamdouh886@gmail.com"
-      #       git config --global user.name "Ahmed Mamdouh"
-      #       ./vendor/bin/pint
-      #       git add .
-      #       git commit -am 'Code standard fixed.'
-      #       git push
+      - run:
+          name: "Lint codebase."
+          command: |
+            ./vendor/bin/pint
             
       # Run tests
       - run:
           name: "Run PHPUnit tests"
           command: |
             ./vendor/bin/phpunit
-      
-  lint:
-    executor: php-executor
-    steps:
-      - attach_workspace:
-          at: .
-      - run:
-          name: Run Laravel Pint (Code Style)
-          command: ./vendor/bin/pint
             
 workflows:
   version: 2
   main_workflow:
     jobs:
       - build_and_test
-      - lint:
-          requires:
-            - build_and_test
+
