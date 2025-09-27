@@ -37,6 +37,12 @@ jobs:
           command: |
             cp .env.example .env
             php artisan key:generate
+      
+      # Lint code.
+      - run:
+          name: "Lint codebase."
+          command: |
+            ./vendor/bin/pint
             
       # Run tests
       - run:
