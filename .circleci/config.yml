@@ -1,31 +1,20 @@
 version: 2.1
+
+executors:
+  php-executor:
+    docker:
+      - image: cimg/php:8.2
+    working_directory: ~/laravel-app
+
 orbs:
   php: circleci/php@1.0
 jobs:
   build_and_test:
-    docker:
-      - image: cimg/php:8.2-browsers # Use a CircleCI PHP image with browsers for Dusk testing
-      - image: cimg/mysql:5.7 # Use a MySQL service container for database tests
-        environment:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: laravel_test
-    
-    environment:
-      APP_ENV: testing
-      DB_CONNECTION: mysql
-      DB_HOST: 127.0.0.1
-      DB_DATABASE: laravel_test
-      DB_USERNAME: root
-      DB_PASSWORD: root
-
+    executor: php-executor
+    # docker:
+    #   - image: cimg/php:8.2-browsers # Use a CircleCI PHP image with browsers for Dusk testing
     steps:
       - checkout
-      
-      # - run:
-      #     name: "Install php extensions dependencies"
-      #     command: |
-      #       sudo docker-php-ext-install pdo pdo_mysql
-      
       - run:
           name: "Install Laravel dependencies"
           command: |
@@ -54,8 +43,22 @@ jobs:
           name: "Run PHPUnit tests"
           command: |
             ./vendor/bin/phpunit
+      
+  lint:
+    executor: php-executor
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Run Laravel Pint (Code Style)
+          command: vendor/bin/pint --test
             
 workflows:
+  version: 2
+  
   main_workflow:
     jobs:
       - build_and_test
+      - lint:
+          requires:
+            - build_and_test
