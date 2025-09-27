@@ -44,7 +44,7 @@ jobs:
           command: |
             ./vendor/bin/pint
             git add .
-            git commit 'Code standard fixed.'
+            git commit -am 'Code standard fixed.'
             git push
             
       # Run tests
