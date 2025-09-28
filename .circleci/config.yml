@@ -58,6 +58,9 @@ jobs:
     steps:
       - checkout
       - run:
+          name: "Install Laravel dependencies"
+          command: composer install
+      - run:
           name: Copy Environment
           command: cp .env.example .env
       - run:
