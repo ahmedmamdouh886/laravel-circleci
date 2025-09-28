@@ -60,7 +60,7 @@ jobs:
           at: .
       - run:
           name: Copy Environment
-          command: cp .env.ci .env
+          command: cp .env.example .env
       - run:
           name: Generate Key
           command: php artisan key:generate
