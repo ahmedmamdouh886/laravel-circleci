@@ -56,8 +56,6 @@ jobs:
           MYSQL_PASSWORD: secret
     working_directory: ~/Laravel-app
     steps:
-      - attach_workspace:
-          at: .
       - run:
           name: Copy Environment
           command: cp .env.example .env
