@@ -54,7 +54,7 @@ jobs:
           MYSQL_DATABASE: laravel_test
           MYSQL_USER: laravel
           MYSQL_PASSWORD: secret
-    working_directory: ~/laravel-app
+    working_directory: ~/Laravel-app
     steps:
       - attach_workspace:
           at: .
