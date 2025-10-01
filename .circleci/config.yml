@@ -8,44 +8,60 @@ executors:
 
 orbs:
   php: circleci/php@1.0
+  node: circleci/node@5.0
   
 jobs:
   build:
     executor: php-executor
-    # docker:
-    #   - image: cimg/php:8.2-browsers # Use a CircleCI PHP image with browsers for Dusk testing
     steps:
       - checkout
+
+      # Restore Composer cache
+      - restore_cache:
+          keys:
+            - composer-v1-{{ checksum "composer.lock" }}
+            - composer-v1-
+
+      # Install Laravel dependencies
       - run:
-          name: "Install Laravel dependencies"
-          command: |
-            composer install
-          
-      # Set up the Laravel application
+          name: Install Composer dependencies
+          command: composer install --prefer-dist --no-progress --no-suggest
+
+      # Save cache
+      - save_cache:
+          paths:
+            - vendor
+          key: composer-v1-{{ checksum "composer.lock" }}
+
+      # Setup Laravel
       - run:
-          name: "Setup Laravel"
+          name: Setup Laravel
           command: |
             cp .env.example .env
             php artisan key:generate
-      
-      # Lint code.
+
+      # Lint code with Pint
       - run:
-          name: "Lint codebase."
-          command: |
-            git config --global user.email "ci-bot@example.com"
-            git config --global user.name "CircleCI Bot"
-            ./vendor/bin/pint
+          name: Lint codebase with Pint
+          command: ./vendor/bin/pint
+
+      # Commit & Push fixes (only on main branch)
       - run:
           name: Commit & Push Fixes
           command: |
-            if [ -n "$(git status --porcelain)" ]; then
-              git add .
-              git commit -m 'Code style fixed.'
-              # git push origin HEAD --force
-              git push
+            git config --global user.email "ahmedmamdouh886@gmail.com"
+            git config --global user.name "Ahmed Mamdouh"
+
+            if [ "$CIRCLE_BRANCH" == "main" ]; then
+              if [ -n "$(git status --porcelain)" ]; then
+                git add .
+                git commit -m "Code style fixed by CI"
+                git push origin main
+              else
+                echo "No Pint fixes needed"
+              fi
             else
-              echo "No Pint fixes needed"
-              circleci-agent step halt
+              echo "Skipping auto-push for non-main branch"
             fi
 
   test:
@@ -60,21 +76,43 @@ jobs:
     working_directory: ~/Laravel-app
     steps:
       - checkout
+
+      # Restore Composer cache
+      - restore_cache:
+          keys:
+            - composer-v1-{{ checksum "composer.lock" }}
+            - composer-v1-
+
+      # Install Laravel dependencies
       - run:
-          name: "Install Laravel dependencies"
-          command: composer install
+          name: Install Composer dependencies
+          command: composer install --prefer-dist --no-progress --no-suggest
+
+      # Setup Laravel
+      - run: cp .env.example .env
+      - run: php artisan key:generate
+
+      # Wait for DB to be ready
       - run:
-          name: Copy Environment
-          command: cp .env.example .env
-      - run:
-          name: Generate Key
-          command: php artisan key:generate
-      - run:
-          name: Run Migrations
-          command: php artisan migrate --force
-      - run:
-          name: Run PHPUnit Tests
-          command: vendor/bin/phpunit
+          name: Wait for MySQL
+          command: |
+            for i in `seq 1 30`; do
+              nc -z 127.0.0.1 3306 && echo "MySQL is up" && break
+              echo "Waiting for MySQL..."
+              sleep 2
+            done
+
+      # Run migrations
+      - run: php artisan migrate --force
+
+      # Run PHPUnit tests
+      - run: vendor/bin/phpunit --log-junit tests/_output/junit.xml
+
+      # Store test results & artifacts
+      - store_test_results:
+          path: tests/_output
+      - store_artifacts:
+          path: tests/_output
             
 workflows:
   version: 2
