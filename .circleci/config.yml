@@ -40,10 +40,12 @@ jobs:
           command: |
             if [ -n "$(git status --porcelain)" ]; then
               git add .
-              git commit --amend --no-edit
-              git push origin HEAD --force
+              git commit -m 'Code style fixed.'
+              # git push origin HEAD --force
+              git push
             else
               echo "No Pint fixes needed"
+              circleci-agent step halt
             fi
 
   test:
