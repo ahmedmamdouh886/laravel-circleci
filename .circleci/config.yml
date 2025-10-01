@@ -81,6 +81,4 @@ workflows:
   main_workflow:
     jobs:
       - build
-      - test:
-          requires:
-            - build
+      - test
