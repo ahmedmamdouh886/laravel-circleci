@@ -118,61 +118,11 @@ jobs:
       - slack/notify:
           channel: "C09HMF5MJPR"
           event: fail
-          custom: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "fields": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Project:* ${CIRCLE_PROJECT_REPONAME}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Branch:* ${CIRCLE_BRANCH}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Commit:* ${CIRCLE_SHA1:0:7}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Build URL:* ${CIRCLE_BUILD_URL}"
-                    }
-                  ]
-                }
-              ]
-            }
+          template: basic_fail_1
       - slack/notify:
           channel: "C09HMF5MJPR"
           event: pass
-          custom: |
-            {
-              "blocks": [
-                {
-                  "type": "section",
-                  "fields": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Project:* ${CIRCLE_PROJECT_REPONAME}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Branch:* ${CIRCLE_BRANCH}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Commit:* ${CIRCLE_SHA1:0:7}"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Build URL:* ${CIRCLE_BUILD_URL}"
-                    }
-                  ]
-                }
-              ]
-            }
+          template: basic_success_1
             
 workflows:
   version: 2
