@@ -1,35 +1,19 @@
 version: 2.1
 
-orbs:
-  php: circleci/php@1.0
-  node: circleci/node@5.0
-  slack: circleci/slack@4.3.0
-
-commands:
-  notify_slack_error:
-    steps:
-      - slack/notify:
-          event: fail
-          template: basic_fail_1
-
-  notify_slack_pass:
-    steps:
-      - slack/notify:
-          event: pass
-          template: basic_success_1
-
 executors:
   php-executor:
     docker:
       - image: cimg/php:8.2
     working_directory: ~/Laravel-app
 
-
+orbs:
+  php: circleci/php@1.0
+  node: circleci/node@5.0
+  
 jobs:
   build:
     executor: php-executor
     steps:
-      - trigger_slack_notification
       - checkout
 
       # Restore Composer cache
@@ -80,8 +64,6 @@ jobs:
             else
               echo "Skipping auto-push for non-main branch"
             fi
-      - notify_slack_error
-      - notify_slack_pass
 
   test:
     docker:
