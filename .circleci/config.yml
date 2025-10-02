@@ -117,6 +117,7 @@ jobs:
           path: tests/_output
       - slack/notify:
           channel: "C09HMF5MJPR"
+          event: fail
           custom: |
             {
               "blocks": [
@@ -124,35 +125,54 @@ jobs:
                   "type": "section",
                   "fields": [
                     {
-                      "type": "plain_text",
-                      "text": "*Build Status Update: ${CIRCLE_JOB}*"
-                    }
-                  ]
-                },
-                {
-                  "type": "section",
-                  "fields": [
-                    {
-                      "type": "plain_text",
+                      "type": "mrkdwn",
                       "text": "*Project:* ${CIRCLE_PROJECT_REPONAME}"
                     },
                     {
-                      "type": "plain_text",
+                      "type": "mrkdwn",
                       "text": "*Branch:* ${CIRCLE_BRANCH}"
                     },
                     {
-                      "type": "plain_text",
+                      "type": "mrkdwn",
                       "text": "*Commit:* ${CIRCLE_SHA1:0:7}"
                     },
                     {
-                      "type": "plain_text",
+                      "type": "mrkdwn",
                       "text": "*Build URL:* ${CIRCLE_BUILD_URL}"
                     }
                   ]
                 }
               ]
             }
-          event: always
+      - slack/notify:
+          channel: "C09HMF5MJPR"
+          event: pass
+          custom: |
+            {
+              "blocks": [
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Project:* ${CIRCLE_PROJECT_REPONAME}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Branch:* ${CIRCLE_BRANCH}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Commit:* ${CIRCLE_SHA1:0:7}"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Build URL:* ${CIRCLE_BUILD_URL}"
+                    }
+                  ]
+                }
+              ]
+            }
             
 workflows:
   version: 2
