@@ -117,7 +117,7 @@ jobs:
           path: tests/_output
       - slack/notify:
           channel: "C09HMF5MJPR"
-          template: |
+          custom: |
             {
               "blocks": [
                 {
