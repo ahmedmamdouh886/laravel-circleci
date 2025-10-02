@@ -9,6 +9,7 @@ executors:
 orbs:
   php: circleci/php@1.0
   node: circleci/node@5.0
+  slack: circleci/slack@4.10.1
   
 jobs:
   build:
@@ -64,6 +65,14 @@ jobs:
             else
               echo "Skipping auto-push for non-main branch"
             fi
+      - slack/notify:
+          channel: "C09CCTXJQLV"
+          event: fail
+          template: basic_fail_1
+      - slack/notify:
+          channel: "C09CCTXJQLV"
+          event: pass
+          template: basic_success_1
 
   test:
     docker:
