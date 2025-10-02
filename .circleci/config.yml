@@ -122,28 +122,30 @@ jobs:
               "blocks": [
                 {
                   "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "*Build Status Update: ${CIRCLE_JOB}*"
-                  }
+                  "fields": [
+                    {
+                      "type": "plain_text",
+                      "text": "*Build Status Update: ${CIRCLE_JOB}*"
+                    }
+                  ]
                 },
                 {
                   "type": "section",
                   "fields": [
                     {
-                      "type": "mrkdwn",
+                      "type": "plain_text",
                       "text": "*Project:* ${CIRCLE_PROJECT_REPONAME}"
                     },
                     {
-                      "type": "mrkdwn",
+                      "type": "plain_text",
                       "text": "*Branch:* ${CIRCLE_BRANCH}"
                     },
                     {
-                      "type": "mrkdwn",
+                      "type": "plain_text",
                       "text": "*Commit:* ${CIRCLE_SHA1:0:7}"
                     },
                     {
-                      "type": "mrkdwn",
+                      "type": "plain_text",
                       "text": "*Build URL:* ${CIRCLE_BUILD_URL}"
                     }
                   ]
