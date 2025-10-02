@@ -66,11 +66,11 @@ jobs:
               echo "Skipping auto-push for non-main branch"
             fi
       - slack/notify:
-          channel: "C09CCTXJQLV"
+          channel: "C09HMF5MJPR"
           event: fail
           template: basic_fail_1
       - slack/notify:
-          channel: "C09CCTXJQLV"
+          channel: "C09HMF5MJPR"
           event: pass
           template: basic_success_1
 
