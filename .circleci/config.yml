@@ -132,3 +132,173 @@ workflows:
       - test:
           requires:
             - build
+
+
+
+
+
+
+# version: 2.1
+
+# executors:
+#   php-executor:
+#     docker:
+#       - image: cimg/php:8.2
+#     working_directory: ~/Laravel-app
+
+# orbs:
+#   php: circleci/php@1.0
+#   node: circleci/node@5.0
+#   slack: circleci/slack@4.10.1
+  
+# jobs:
+#   build:
+#     executor: php-executor
+#     steps:
+#       - checkout
+
+#       # Restore Composer cache
+#       - restore_cache:
+#           keys:
+#             - composer-v1-{{ checksum "composer.lock" }}
+#             - composer-v1-
+
+#       # Install Laravel dependencies
+#       - run:
+#           name: Install Composer dependencies
+#           command: composer install --prefer-dist --no-progress --no-suggest
+
+#       # Save cache
+#       - save_cache:
+#           paths:
+#             - vendor
+#           key: composer-v1-{{ checksum "composer.lock" }}
+
+#       # Setup Laravel
+#       - run:
+#           name: Setup Laravel
+#           command: |
+#             cp .env.example .env
+#             php artisan key:generate
+
+#       # Lint code with Pint
+#       - run:
+#           name: Lint codebase with Pint
+#           command: ./vendor/bin/pint
+
+#       # Commit & Push fixes (only on main branch)
+#       - run:
+#           name: Commit & Push Fixes
+#           command: |
+#             git config --global user.email "ahmedmamdouh886@gmail.com"
+#             git config --global user.name "Ahmed Mamdouh"
+#             git remote set-url origin https://${GITHUB_TOKEN}@github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}.git
+
+#             if [ "$CIRCLE_BRANCH" == "main" ]; then
+#               if [ -n "$(git status --porcelain)" ]; then
+#                 git add .
+#                 git commit -m "Code style fixed by CI [skip ci]"
+#                 git push origin main
+#               else
+#                 echo "No Pint fixes needed"
+#               fi
+#             else
+#               echo "Skipping auto-push for non-main branch"
+#             fi
+
+#   test:
+#     docker:
+#       - image: cimg/php:8.2
+#       - image: cimg/mysql:8.0
+#         environment:
+#           MYSQL_ROOT_PASSWORD: root
+#           MYSQL_DATABASE: laravel_test
+#           MYSQL_USER: laravel
+#           MYSQL_PASSWORD: secret
+#     working_directory: ~/Laravel-app
+#     steps:
+#       - checkout
+
+#       # Restore Composer cache
+#       - restore_cache:
+#           keys:
+#             - composer-v1-{{ checksum "composer.lock" }}
+#             - composer-v1-
+
+#       # Install Laravel dependencies
+#       - run:
+#           name: Install Composer dependencies
+#           command: composer install --prefer-dist --no-progress --no-suggest
+
+#       # Setup Laravel
+#       - run: cp .env.example .env
+#       - run: php artisan key:generate
+
+#       # Wait for DB to be ready
+#       - run:
+#           name: Wait for MySQL
+#           command: |
+#             for i in `seq 1 30`; do
+#               nc -z 127.0.0.1 3306 && echo "MySQL is up" && break
+#               echo "Waiting for MySQL..."
+#               sleep 2
+#             done
+
+#       # Run migrations
+#       - run: php artisan migrate --force
+
+#       # Run PHPUnit tests
+#       - run: vendor/bin/phpunit --log-junit tests/_output/junit.xml
+
+#       # Store test results & artifacts
+#       - store_test_results:
+#           path: tests/_output
+#       - store_artifacts:
+#           path: tests/_output
+#       - slack/notify:
+#           channel: "C09HMF5MJPR"
+#           custom: |
+#             {
+#               "blocks": [
+#                 {
+#                   "type": "section",
+#                   "fields": [
+#                     {
+#                       "type": "mrkdwn",
+#                       "text": "*Build Status Update: ${CIRCLE_JOB}*"
+#                     }
+#                   ]
+#                 },
+#                 {
+#                   "type": "section",
+#                   "fields": [
+#                     {
+#                       "type": "mrkdwn",
+#                       "text": "*Project:* ${CIRCLE_PROJECT_REPONAME}"
+#                     },
+#                     {
+#                       "type": "mrkdwn",
+#                       "text": "*Branch:* ${CIRCLE_BRANCH}"
+#                     },
+#                     {
+#                       "type": "mrkdwn",
+#                       "text": "*Commit:* ${CIRCLE_SHA1:0:7}"
+#                     },
+#                     {
+#                       "type": "mrkdwn",
+#                       "text": "*Build URL:* ${CIRCLE_BUILD_URL}"
+#                     }
+#                   ]
+#                 }
+#               ]
+#             }
+#           event: always
+            
+# workflows:
+#   version: 2
+#   main_workflow:
+#     jobs:
+#       - build
+#       - test:
+#           requires:
+#             - build
