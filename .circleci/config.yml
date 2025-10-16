@@ -125,7 +125,6 @@ jobs:
           template: basic_success_1
             
 workflows:
-  version: 2
   main_workflow:
     jobs:
       - build
